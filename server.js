@@ -8,6 +8,8 @@ const __filename = fileURLToPath(import.meta.url);
 export const __dirname = path.dirname(__filename);
 
 const app = express();
+app.set('view engine', 'hbs');
+app.set('views', path.join(__dirname, 'views'));
 const PORT = 3000;
 
 app.use((req, res, next) => {
@@ -17,9 +19,15 @@ app.use((req, res, next) => {
   console.log(`${req.method} ${req.baseUrl}${req.url} ${delta}ms`);
 });
 
-app.use('/site', express.static(path.join(__dirname, 'public'))); //content from public folder http://localhost:3000/site/
+app.use('/site', express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
+app.get('/', (req, res) => {
+  res.render('index', {
+    title: 'My Friends Are Clever',
+    caption: 'Let\'s go skiing!',
+  });
+});
 app.use('/friends', friendsRouter);
 app.use('/messages', messagesRouter);
 
