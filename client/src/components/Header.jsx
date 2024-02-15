@@ -82,18 +82,18 @@ const Header = props => {
       {/*<Logo animate size={50} className={classes.logo} layer="header"/>*/}
       <Banner>NASA Mission Control</Banner>
       <nav>
-        <Button onClick={onNav}>
-          <Link to="/launch">
+        {/*<Button onClick={onNav}>*/}
+          <Link href="/launch">
             <i className="material-icons">check_circle_outline</i>Launch
           </Link>
-        </Button>
-        <Button onClick={onNav}>
-          <Link to="/upcoming">
+        {/*</Button>*/}
+        {/*<Button onClick={onNav}>*/}
+          <Link href="/upcoming">
             <i className="material-icons">update</i>Upcoming
           </Link>
-        </Button>
+        {/*</Button>*/}
         <Button onClick={onNav}>
-          <Link to="/history">
+          <Link href="/history">
             <i className="material-icons">history</i>History
           </Link>
         </Button>
