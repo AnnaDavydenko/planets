@@ -14,6 +14,10 @@ const launch = {
 
 launches.set(launch.flightNumber, launch);
 
+export const isExistsLaunchWithId = (launchId) => {
+  return launches.has(launchId);
+};
+
 export const getAllLaunches = () => Array.from(launches.values());
 
 export const addNewLaunch = (launch) => {
@@ -24,6 +28,13 @@ export const addNewLaunch = (launch) => {
     upcoming: true,
     success: true,
   }));
+};
+
+export const abortLaunchById = (launchId) => {
+  const abortedLaunch = launches.get(launchId);
+  abortedLaunch.upcoming = false;
+  abortedLaunch.success = false;
+  return abortedLaunch;
 };
 
 //get launch Obj by flightNumber
