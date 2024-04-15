@@ -2,13 +2,14 @@ import {
   useState,
 } from "react";
 import {
+  Switch,
+  Route,
+} from "react-router-dom";
+import {
   Frame,
   withSounds,
   withStyles,
 } from "arwes";
-import {
-  Route, Router, Routes,
-} from 'react-router-dom';
 
 import usePlanets from "../hooks/usePlanets";
 import useLaunches from "../hooks/useLaunches";
@@ -68,23 +69,31 @@ const AppLayout = props => {
         style={{visibility: frameVisible ? "visible" : "hidden"}}>
         {anim => (
           <div style={{padding: "20px"}}>
-            <Routes>
-              <Route path="/" element={<Launch
+          <Switch>
+            <Route exact path="/">
+              <Launch 
                 entered={anim.entered}
                 planets={planets}
                 submitLaunch={submitLaunch}
-                isPendingLaunch={isPendingLaunch} />} />
-              <Route path="/launch" element={<Launch
+                isPendingLaunch={isPendingLaunch} />
+            </Route>
+            <Route exact path="/launch">
+              <Launch
                 entered={anim.entered}
                 planets={planets}
                 submitLaunch={submitLaunch}
-                isPendingLaunch={isPendingLaunch} />} />
-              <Route path="/upcoming" element={ <Upcoming
+                isPendingLaunch={isPendingLaunch} />
+            </Route>
+            <Route exact path="/upcoming">
+              <Upcoming
                 entered={anim.entered}
                 launches={launches}
-                abortLaunch={abortLaunch} />} />
-              <Route path="/history" element={<History launches={launches} />} />
-            </Routes>
+                abortLaunch={abortLaunch} />
+            </Route>
+            <Route exact path="/history">
+              <History entered={anim.entered} launches={launches} />
+            </Route>
+          </Switch>
           </div>
         )}
       </Frame>

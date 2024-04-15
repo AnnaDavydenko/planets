@@ -1,8 +1,6 @@
-// import { withStyles } from "arwes";
+import { withStyles } from "arwes";
 
-import { styled } from '@mui/material/styles';
-
-const Container = styled('div')(({theme}) => ({
+const styles = () => ({
   root: {
     margin: "0 auto",
     maxWidth: 800,
@@ -12,8 +10,7 @@ const Container = styled('div')(({theme}) => ({
       margin: "0 12px",
     }
   }
-}));
-
+});
 
 const Centered = props => {
   const {
@@ -23,10 +20,10 @@ const Centered = props => {
     ...rest
   } = props;
   return (
-    <Container>
+    <div className={`${classes.root} ${className}`} {...rest}>
       {children}
-    </Container>
+    </div>
   );
 };
 
-export default Centered;
+export default withStyles(styles)(Centered);
