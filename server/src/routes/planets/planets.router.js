@@ -3,4 +3,4 @@ import { httpGetAllPlanets } from './planets.controller.js';
 
 export const planetsRouter = express.Router();
 
-planetsRouter.get('/planets', httpGetAllPlanets)
+planetsRouter.get('/', httpGetAllPlanets);
