@@ -1,28 +1,38 @@
-import express from 'express';
-import { friendsRouter } from './routes/friends.router.js';
-import { messagesRouter } from './routes/messages.router.js';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-export const __dirname = path.dirname(__filename);
+const express = require('express');
+const cluster = require('cluster');
+const os = require('os')
 
 const app = express();
-const PORT = 3000;
 
-app.use((req, res, next) => {
-  const start = Date.now();
-  next();
-  const delta = Date.now() - start;
-  console.log(`${req.method} ${req.baseUrl}${req.url} ${delta}ms`);
+function delay(duration) {
+  const startTime = Date.now();
+  while(Date.now() - startTime < duration) {
+    //event loop is blocked...
+  }
+}
+
+app.get('/', (req, res) => {
+  // JSON.stringify({}) => "{}"
+  // JSON.parse("{}") => {}
+  // [5,1,2,3,4].sort()
+  res.send(`Performance example: ${process.pid}`);
 });
 
-app.use('/site', express.static(path.join(__dirname, 'public'))); //content from public folder http://localhost:3000/site/
-app.use(express.json());
-
-app.use('/friends', friendsRouter);
-app.use('/messages', messagesRouter);
-
-app.listen(PORT, () => {
-  console.log(`Listening on ${PORT}`);
+app.get('/timer', (req, res) => {
+  delay(9000)
+  res.send(`Ding Dong! ${process.pid}`);
 });
+
+console.log('Running server.js')
+
+if(cluster.isMaster) {
+  console.log('Master has been started')
+  const NUM_WORKERS = os.cpus().length;
+  for (let i=0; i<NUM_WORKERS; i++) {
+    cluster.fork();
+  }
+} else {
+  console.log('Worker process has been started')
+  app.listen(3000);
+}
+
