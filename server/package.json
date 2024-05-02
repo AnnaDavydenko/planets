@@ -8,7 +8,10 @@
     "test": "NODE_OPTIONS='--experimental-vm-modules' jest",
     "test-watch": "NODE_OPTIONS='--experimental-vm-modules' jest --watch",
     "watch": "nodemon src/server.js",
-    "start": "set PORT=5000 && node src/server.js"
+    "start": "set PORT=5000 && node src/server.js",
+    "cluster": "pm2 start src/server.js -i max",
+    "cluster-delete": "pm2 delete default",
+    "cluster-with logs": "pm2 start src/server.js --log log.txt"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +24,8 @@
   "dependencies": {
     "cors": "^2.8.5",
     "csv-parse": "^5.5.3",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "morgan": "^1.10.0",
+    "pm2": "^5.3.1"
   }
 }
