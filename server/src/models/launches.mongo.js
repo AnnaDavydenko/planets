@@ -21,8 +21,7 @@ const launchesSchema = new mongoose.Schema({
     required: true,
   },
   destination: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Planet',
+    type: String,
     required: true,
   },
   upcoming: {
@@ -37,4 +36,5 @@ const launchesSchema = new mongoose.Schema({
   customers: [String],
 });
 
-
+//Connects launchesSchema with the "launches" collection
+export const launches = mongoose.model('Launch', launchesSchema);

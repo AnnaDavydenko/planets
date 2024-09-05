@@ -1,40 +1,47 @@
-import { getAllLaunches, addNewLaunch, isExistsLaunchWithId, abortLaunchById } from '../../models/launches.model.js';
+import { getAllLaunches, scheduleNewLaunch, isExistsLaunchWithId, abortLaunchById } from '../../models/launches.model.js';
 
-export const httpGetAllLaunches = (req, res) => {
-  // for (const value of launches.values()) {...}
-  return res.status(200).json(getAllLaunches());
+export const httpGetAllLaunches = async (req, res) => {
+    return res.status(200).json(await getAllLaunches());
 };
 
-export const httpAddNewLaunch = (req, res) => {
-  const launch = req.body;
+export const httpAddNewLaunch = async (req, res) => {
+    const launch = req.body;
 
-  if (!launch.mission || !launch.rocket || !launch.launchDate || !launch.destination) {
-    return res.status(400).json({
-      error: 'Missing required launch property (mission, rocket, launchDate or destination)',
-    });
-  }
+    if (!launch.mission || !launch.rocket || !launch.launchDate || !launch.destination) {
+        return res.status(400).json({
+            error: 'Missing required launch property (mission, rocket, launchDate or destination)',
+        });
+    }
 
-  launch.launchDate = new Date(launch.launchDate);
-  if (isNaN(launch.launchDate)) {
-    return res.status(400).json({
-      error: 'Invalid launch date',
-    });
-  }
+    launch.launchDate = new Date(launch.launchDate);
+    if (isNaN(launch.launchDate)) {
+        return res.status(400).json({
+            error: 'Invalid launch date',
+        });
+    }
 
-  addNewLaunch(launch);
-  return res.status(201).json(launch); // created
+    await scheduleNewLaunch(launch);
+    return res.status(201).json(launch); // created
 };
 
-export const httpAbortLaunch = (req, res) => {
-  const launchId = Number(req.params.id);
+export const httpAbortLaunch = async (req, res) => {
+    const launchId = Number(req.params.id);
+    const existsLaunch = await isExistsLaunchWithId(launchId);
 
-  if (!isExistsLaunchWithId(launchId)) {
-    return res.status(400).json({
-      error: 'Launch not found',
+    if (!existsLaunch) {
+        return res.status(400).json({
+            error: 'Launch not found',
+        });
+    }
+
+    const aborted = await abortLaunchById(launchId);
+
+    if (!aborted) {
+        return res.status(400).json({
+            error: 'Launch not aborted',
+        })
+    }
+    return res.status(200).json({
+        ok: true,
     });
-  }
-
-  const aborted = abortLaunchById(launchId);
-  return res.status(200).json(aborted);
-
 };
