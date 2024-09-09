@@ -30,6 +30,7 @@ const getLatestFlightNumber = async () => {
 export const getAllLaunches = async (skip, limit) => {
   return await launchesDatabase
     .find({}, { '_id': 0, '__v': 0 })
+    .sort({ flightNumber: 1 }) //ASC
     .skip(skip)
     .limit(limit);
 }
