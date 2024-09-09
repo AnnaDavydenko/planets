@@ -30,6 +30,8 @@ const getLatestFlightNumber = async () => {
 export const getAllLaunches = async (skip, limit) => {
   return await launchesDatabase
     .find({}, { '_id': 0, '__v': 0 })
+    .skip(skip)
+    .limit(limit);
 }
 
 const saveLaunch = async (launch) => {
@@ -46,6 +48,7 @@ export const populateLaunches = async () => {
   const response = await axios.post(SPACEX_API_URL, {
     query: {},
     options: {
+      pagination: false,
       populate: [{
         path: 'rocket',
         select: {
