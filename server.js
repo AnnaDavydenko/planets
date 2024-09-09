@@ -1,12 +1,26 @@
 import express from 'express';
+import { fileURLToPath } from 'url';
+import path from 'path';
+import * as https from 'https';
+import { readFileSync } from 'node:fs';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const PORT = 3000;
 const app = express();
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + 'public' + 'index.html');
+app.get('/secret', (req, res) => {
+  return res.send('Your secret value is 42!');
 });
 
-app.listen(PORT, () => {
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/public' + '/index.html');
+});
+
+https.createServer({
+  key: readFileSync('key.pem'),
+  cert: readFileSync('cert.pem'),
+}, app).listen(PORT, () => {
   console.log(`Server started on port ${PORT}...`);
-})
+});
