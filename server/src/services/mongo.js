@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+dotenv.config();
 
-const MONGO_URL = 'mongodb+srv://hannaworkaccout:34274TXruB5jaEnD@nasacluster.3kjv2vd.mongodb.net/?retryWrites=true&w=majority&appName=NASACluster';
+const MONGO_URL = process.env.MONGO_URL;
 
 mongoose.connection.once('open', () => {
   console.log('MongoDB connection ready!');
@@ -11,8 +13,7 @@ mongoose.connection.on('error', (err) => {
 
 export const mongoConnect = async () => {
   await mongoose.connect(MONGO_URL);
-}
-
+};
 export const mongoDisconnect = async () => {
   await mongoose.disconnect();
-}
+};
