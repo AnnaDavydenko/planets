@@ -5,7 +5,7 @@
   "main": "src/server.js",
   "type": "module",
   "scripts": {
-    "test": "NODE_OPTIONS='--experimental-vm-modules' jest",
+    "test": "cross-env NODE_OPTIONS='--experimental-vm-modules' jest",
     "test-watch": "NODE_OPTIONS='--experimental-vm-modules' jest --watch",
     "watch": "nodemon src/server.js",
     "start": "set PORT=5000 && node src/server.js",
@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "csv-parse": "^5.5.3",
     "express": "^4.18.2",
     "mongoose": "^8.3.4",
