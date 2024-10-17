@@ -54,7 +54,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 const checkLoggedIn = (req, res, next) => {
-  const isLoggedIn = true; //todo
+  console.log('current user is: ', req.user)
+  const isLoggedIn = req.isAuthenticated() && req.user;
   if (!isLoggedIn) {
     return res.status(401).json({
       error: 'Not logged in',
