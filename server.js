@@ -81,6 +81,8 @@ app.get('/auth/google/callback',
 );
 
 app.get('/auth/logout', (req, res) => {
+  req.logout();
+  return res.redirect('/');
 });
 
 app.get('/secret', checkLoggedIn, (req, res) => {
