@@ -8,6 +8,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 import passport from 'passport';
 import { Strategy } from 'passport-google-oauth20';
+import cookieSession from 'cookie-session';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,6 +16,8 @@ const __dirname = path.dirname(__filename);
 const config = {
   CLIENT_ID: process.env.CLIENT_ID,
   CLIENT_SECRET: process.env.CLIENT_SECRET,
+  COOKIE_KEY_1: process.env.COOKIE_KEY_1,
+  COOKIE_KEY_2: process.env.COOKIE_KEY_2,
 };
 
 const AUTH_OPTIONS = {
@@ -29,11 +32,26 @@ const verifyCallback = (accessToken, refreshToken, profile, done) => {
 };
 
 passport.use(new Strategy(AUTH_OPTIONS, verifyCallback));
+// save the session to the cookie
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+// read the session from the cookie
+passport.deserializeUser((id, done) => {
+  done(null, id);
+});
+
 const PORT = 3000;
 const app = express();
 
 app.use(helmet());
+app.use(cookieSession({
+  name: 'session',
+  maxAge: 24 * 60 * 60 * 1000,
+  keys: [config.COOKIE_KEY_1, config.COOKIE_KEY_2],
+}));
 app.use(passport.initialize());
+app.use(passport.session());
 
 const checkLoggedIn = (req, res, next) => {
   const isLoggedIn = true; //todo
@@ -54,7 +72,7 @@ app.get('/auth/google/callback',
   passport.authenticate('google', {
     failureRedirect: '/failure',
     successRedirect: '/',
-    session: false,
+    session: true,
   }),
   (req, res) => {
     console.log('Google called us back!'); // res.redirect()
